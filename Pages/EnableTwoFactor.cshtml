@@ -1,0 +1,447 @@
+@page
+@model AceJobAgency.Pages.EnableTwoFactorModel
+@{
+    ViewData["Title"] = "Two-Factor Authentication";
+}
+
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-header">
+            <h1>Two-Factor Authentication</h1>
+            <p>Add an extra layer of security to your account</p>
+        </div>
+
+        @if (Model.ShowRecoveryCodes && Model.RecoveryCodes != null)
+        {
+            <div class="recovery-codes-section">
+                <div class="alert-box success">
+                    <i class="bi bi-shield-check me-2"></i>
+                    <strong>2FA Enabled Successfully!</strong>
+                </div>
+
+                <div class="recovery-warning">
+                    <i class="bi bi-exclamation-triangle"></i>
+                    <h3>Save Your Recovery Codes</h3>
+                    <p>
+                        These codes can be used to access your account if you lose your authenticator app.
+                        <strong>Each code can only be used once.</strong> Store them in a safe place.
+                    </p>
+                </div>
+
+                <div class="recovery-codes-box">
+                    @foreach (var code in Model.RecoveryCodes)
+                    {
+                        <code>@code</code>
+                    }
+                </div>
+
+                <div class="form-actions">
+                    <a href="/Index" class="btn btn-primary">
+                        <i class="bi bi-house me-2"></i>Go to Dashboard
+                    </a>
+                </div>
+            </div>
+        }
+        else if (Model.Is2FAEnabled)
+        {
+            <div class="two-factor-enabled">
+                <div class="status-icon enabled">
+                    <i class="bi bi-shield-fill-check"></i>
+                </div>
+                <h2>2FA is Enabled</h2>
+                <p>Your account is protected with two-factor authentication.</p>
+
+                <div class="form-actions">
+                    <a href="/DisableTwoFactor" class="btn btn-outline-danger">
+                        <i class="bi bi-shield-x me-2"></i>Disable 2FA
+                    </a>
+                    <a href="/Index" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left me-2"></i>Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="setup-section">
+                <h2>Setup Authenticator App</h2>
+
+                <div class="setup-steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>Download an Authenticator App</h4>
+                            <p>Install one of these apps on your phone:</p>
+                            <ul>
+                                <li>Google Authenticator</li>
+                                <li>Microsoft Authenticator</li>
+                                <li>Authy</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>Scan the QR Code</h4>
+                            <p>Open your authenticator app and scan this QR code:</p>
+                            <div class="qr-code-container">
+                                @if (!string.IsNullOrEmpty(Model.QrCodeBase64))
+                                {
+                                    <img src="data:image/png;base64,@Model.QrCodeBase64" alt="QR Code for 2FA" class="qr-code" />
+                                }
+                            </div>
+                            <div class="manual-key">
+                                <p>Or enter this key manually:</p>
+                                <code>@Model.SharedKey</code>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Enter Verification Code</h4>
+                            <p>Enter the 6-digit code from your authenticator app:</p>
+
+                            <form method="post">
+                                <div class="verification-input">
+                                    <input type="text" asp-for="Input.Code"
+                                           class="form-control code-input"
+                                           placeholder="000000"
+                                           maxlength="6"
+                                           pattern="\d{6}"
+                                           autocomplete="one-time-code"
+                                           inputmode="numeric" />
+                                    <span asp-validation-for="Input.Code" class="text-danger"></span>
+                                </div>
+
+                                @if (!ViewData.ModelState.IsValid)
+                                {
+                                    <div class="validation-summary">
+                                        <ul>
+                                            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                                            {
+                                                <li>@error.ErrorMessage</li>
+                                            }
+                                        </ul>
+                                    </div>
+                                }
+
+                                <button type="submit" class="btn btn-primary btn-block">
+                                    <i class="bi bi-shield-check me-2"></i>Enable 2FA
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <a href="/Index" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left me-2"></i>Cancel
+                    </a>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .auth-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .auth-card {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        padding: 2.5rem;
+        width: 100%;
+        max-width: 600px;
+    }
+
+    .auth-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .auth-header h1 {
+        color: #333;
+        font-size: 1.75rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .auth-header p {
+        color: #666;
+    }
+
+    .setup-section h2 {
+        color: #333;
+        font-size: 1.25rem;
+        margin-bottom: 1.5rem;
+        text-align: center;
+    }
+
+    .setup-steps {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .step {
+        display: flex;
+        gap: 1rem;
+        padding: 1rem;
+        background: #f8f9fa;
+        border-radius: 12px;
+    }
+
+    .step-number {
+        width: 32px;
+        height: 32px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        flex-shrink: 0;
+    }
+
+    .step-content {
+        flex: 1;
+    }
+
+    .step-content h4 {
+        margin: 0 0 0.5rem 0;
+        color: #333;
+        font-size: 1rem;
+    }
+
+    .step-content p {
+        margin: 0 0 0.5rem 0;
+        color: #666;
+        font-size: 0.9rem;
+    }
+
+    .step-content ul {
+        margin: 0;
+        padding-left: 1.25rem;
+        color: #666;
+        font-size: 0.9rem;
+    }
+
+    .qr-code-container {
+        display: flex;
+        justify-content: center;
+        margin: 1rem 0;
+    }
+
+    .qr-code {
+        width: 200px;
+        height: 200px;
+        border: 4px solid #f0f0f0;
+        border-radius: 8px;
+    }
+
+    .manual-key {
+        text-align: center;
+        margin-top: 1rem;
+    }
+
+    .manual-key code {
+        display: inline-block;
+        background: #f0f0f0;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        font-family: 'Courier New', monospace;
+        font-size: 1rem;
+        letter-spacing: 2px;
+        word-break: break-all;
+    }
+
+    .verification-input {
+        margin-bottom: 1rem;
+    }
+
+    .code-input {
+        text-align: center;
+        font-size: 1.5rem;
+        letter-spacing: 8px;
+        font-family: 'Courier New', monospace;
+        padding: 0.75rem;
+    }
+
+    .btn {
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 500;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        border: none;
+        transition: all 0.2s;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-block {
+        width: 100%;
+    }
+
+    .btn-secondary {
+        background: #6c757d;
+        color: white;
+    }
+
+    .btn-outline-danger {
+        background: transparent;
+        border: 2px solid #dc3545;
+        color: #dc3545;
+    }
+
+    .btn-outline-danger:hover {
+        background: #dc3545;
+        color: white;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        margin-top: 1.5rem;
+    }
+
+    .alert-box {
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .alert-box.success {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+
+    .validation-summary {
+        background: #f8d7da;
+        color: #721c24;
+        padding: 0.75rem;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+    }
+
+    .validation-summary ul {
+        margin: 0;
+        padding-left: 1.25rem;
+    }
+
+    .text-danger {
+        color: #dc3545;
+        font-size: 0.85rem;
+    }
+
+    /* 2FA Enabled State */
+    .two-factor-enabled {
+        text-align: center;
+        padding: 2rem 0;
+    }
+
+    .status-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+        font-size: 2.5rem;
+    }
+
+    .status-icon.enabled {
+        background: #d4edda;
+        color: #28a745;
+    }
+
+    .two-factor-enabled h2 {
+        color: #28a745;
+        margin-bottom: 0.5rem;
+    }
+
+    .two-factor-enabled p {
+        color: #666;
+        margin-bottom: 1.5rem;
+    }
+
+    /* Recovery Codes */
+    .recovery-codes-section {
+        text-align: center;
+    }
+
+    .recovery-warning {
+        background: #fff3cd;
+        border: 1px solid #ffc107;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .recovery-warning i {
+        font-size: 2rem;
+        color: #856404;
+        margin-bottom: 0.5rem;
+    }
+
+    .recovery-warning h3 {
+        color: #856404;
+        margin: 0.5rem 0;
+    }
+
+    .recovery-warning p {
+        color: #856404;
+        margin: 0;
+        font-size: 0.9rem;
+    }
+
+    .recovery-codes-box {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.5rem;
+        background: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+    }
+
+    .recovery-codes-box code {
+        background: white;
+        padding: 0.5rem;
+        border-radius: 4px;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9rem;
+        border: 1px solid #dee2e6;
+    }
+</style>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

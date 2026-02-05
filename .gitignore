@@ -1,0 +1,38 @@
+# .NET build output
+bin/
+obj/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# IDE
+.vs/
+.vscode/
+.idea/
+
+# Secrets - NEVER commit these
+appsettings.*.json
+!appsettings.json
+secrets.json
+*.pfx
+*.key
+
+# Uploads folder (user data)
+wwwroot/uploads/
+
+# Logs
+*.log
+logs/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Claude AI conversation files
+.claude/
+
+# Assignment PDF
+*.pdf

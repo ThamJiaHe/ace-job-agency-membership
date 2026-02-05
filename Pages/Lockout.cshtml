@@ -1,0 +1,172 @@
+@page
+@{
+    ViewData["Title"] = "Account Locked";
+}
+
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-header">
+            <div class="auth-icon error">
+                <i class="bi bi-lock-fill"></i>
+            </div>
+            <h1>Account Locked</h1>
+            <p>Your account has been temporarily locked due to multiple failed login attempts.</p>
+        </div>
+
+        <div class="lockout-info">
+            <i class="bi bi-clock"></i>
+            <p>Please try again in <strong>5 minutes</strong>.</p>
+        </div>
+
+        <div class="lockout-tips">
+            <h3>While you wait:</h3>
+            <ul>
+                <li>Make sure you're using the correct email address</li>
+                <li>Check if Caps Lock is on</li>
+                <li>Try resetting your password if you've forgotten it</li>
+            </ul>
+        </div>
+
+        <div class="form-actions">
+            <a href="/ForgotPassword" class="btn btn-outline-primary">
+                <i class="bi bi-key me-2"></i>Reset Password
+            </a>
+            <a href="/Login" class="btn btn-secondary">
+                <i class="bi bi-arrow-left me-2"></i>Back to Login
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .auth-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .auth-card {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        padding: 2.5rem;
+        width: 100%;
+        max-width: 480px;
+        text-align: center;
+    }
+
+    .auth-header {
+        margin-bottom: 2rem;
+    }
+
+    .auth-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+    }
+
+    .auth-icon.error {
+        background: #f8d7da;
+        color: #dc3545;
+    }
+
+    .auth-icon i {
+        font-size: 2.5rem;
+    }
+
+    .auth-header h1 {
+        color: #dc3545;
+        font-size: 1.75rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .auth-header p {
+        color: #666;
+    }
+
+    .lockout-info {
+        background: #fff3cd;
+        border: 1px solid #ffc107;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .lockout-info i {
+        font-size: 2rem;
+        color: #856404;
+        margin-bottom: 0.5rem;
+    }
+
+    .lockout-info p {
+        color: #856404;
+        margin: 0;
+    }
+
+    .lockout-tips {
+        text-align: left;
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 1rem 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .lockout-tips h3 {
+        color: #333;
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .lockout-tips ul {
+        margin: 0;
+        padding-left: 1.25rem;
+        color: #666;
+        font-size: 0.9rem;
+    }
+
+    .lockout-tips li {
+        margin-bottom: 0.25rem;
+    }
+
+    .btn {
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 500;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        border: none;
+        transition: all 0.2s;
+    }
+
+    .btn-outline-primary {
+        background: transparent;
+        border: 2px solid #667eea;
+        color: #667eea;
+    }
+
+    .btn-outline-primary:hover {
+        background: #667eea;
+        color: white;
+    }
+
+    .btn-secondary {
+        background: #6c757d;
+        color: white;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+    }
+</style>

@@ -1,0 +1,498 @@
+@page
+@model AceJobAgency.Pages.IndexModel
+@{
+    ViewData["Title"] = "Home";
+}
+
+<style>
+    :root {
+        --primary: #2563eb;
+        --primary-light: rgba(37, 99, 235, 0.1);
+        --success: #10b981;
+        --success-light: rgba(16, 185, 129, 0.1);
+        --warning: #f59e0b;
+        --bg-light: #f8fafc;
+        --text-dark: #1e293b;
+        --text-muted: #64748b;
+        --border-color: #e2e8f0;
+    }
+
+    /* Hero Section for Non-Authenticated Users */
+    .hero-section {
+        text-align: center;
+        padding: 4rem 1rem;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .hero-icon {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, var(--primary) 0%, #3b82f6 100%);
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+        color: white;
+        font-size: 2rem;
+    }
+
+    .hero-section h1 {
+        font-size: 2.25rem;
+        font-weight: 700;
+        color: var(--text-dark);
+        margin-bottom: 1rem;
+    }
+
+    .hero-section p {
+        font-size: 1.1rem;
+        color: var(--text-muted);
+        margin-bottom: 2rem;
+        line-height: 1.6;
+    }
+
+    .hero-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .btn-hero {
+        padding: 0.875rem 2rem;
+        font-size: 1rem;
+        font-weight: 600;
+        border-radius: 10px;
+        text-decoration: none;
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .btn-hero-primary {
+        background: linear-gradient(135deg, var(--primary) 0%, #3b82f6 100%);
+        color: white;
+        border: none;
+    }
+
+    .btn-hero-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+        color: white;
+    }
+
+    .btn-hero-outline {
+        background: white;
+        color: var(--primary);
+        border: 2px solid var(--primary);
+    }
+
+    .btn-hero-outline:hover {
+        background: var(--primary);
+        color: white;
+    }
+
+    /* Dashboard for Authenticated Users */
+    .dashboard {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 1rem;
+    }
+
+    .welcome-banner {
+        background: linear-gradient(135deg, var(--primary) 0%, #3b82f6 100%);
+        border-radius: 16px;
+        padding: 2rem;
+        color: white;
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .welcome-content h1 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+
+    .welcome-content p {
+        opacity: 0.9;
+        margin: 0;
+    }
+
+    .welcome-avatar {
+        width: 64px;
+        height: 64px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .info-card {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+        overflow: hidden;
+    }
+
+    .info-card-header {
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .info-card-header .icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+    }
+
+    .info-card-header .icon.blue {
+        background: var(--primary-light);
+        color: var(--primary);
+    }
+
+    .info-card-header .icon.green {
+        background: var(--success-light);
+        color: var(--success);
+    }
+
+    .info-card-header h3 {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--text-dark);
+        margin: 0;
+    }
+
+    .info-card-body {
+        padding: 1.5rem;
+    }
+
+    .info-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .info-row:last-child {
+        border-bottom: none;
+    }
+
+    .info-label {
+        color: var(--text-muted);
+        font-size: 0.875rem;
+    }
+
+    .info-value {
+        color: var(--text-dark);
+        font-weight: 500;
+        font-size: 0.875rem;
+        text-align: right;
+        max-width: 60%;
+        word-break: break-word;
+    }
+
+    .info-value.sensitive {
+        font-family: monospace;
+        background: var(--bg-light);
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+    }
+
+    .bio-text {
+        color: var(--text-dark);
+        line-height: 1.6;
+        font-size: 0.9rem;
+    }
+
+    .bio-text.empty {
+        color: var(--text-muted);
+        font-style: italic;
+    }
+
+    .info-card-actions {
+        padding: 0.75rem 1.5rem;
+        background: var(--bg-light);
+        display: flex;
+        gap: 1rem;
+        border-top: 1px solid var(--border-color);
+    }
+
+    .action-link {
+        font-size: 0.85rem;
+        color: var(--primary);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    .action-link:hover {
+        text-decoration: underline;
+    }
+
+    /* Session Info */
+    .session-info {
+        margin-top: 2rem;
+        padding: 1rem 1.5rem;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .session-info .session-text {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+    }
+
+    .session-info .session-text strong {
+        color: var(--text-dark);
+    }
+
+    .session-timeout {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.85rem;
+        color: var(--warning);
+    }
+
+    @@media (max-width: 640px) {
+        .welcome-banner {
+            text-align: center;
+            justify-content: center;
+        }
+
+        .info-row {
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .info-value {
+            text-align: left;
+            max-width: 100%;
+        }
+    }
+</style>
+
+@if (User.Identity?.IsAuthenticated == true && Model.CurrentUser != null)
+{
+    <!-- Authenticated User Dashboard -->
+    <div class="dashboard">
+        <!-- Welcome Banner -->
+        <div class="welcome-banner">
+            <div class="welcome-content">
+                <h1>Welcome back, @Model.CurrentUser.FirstName!</h1>
+                <p>Here's your membership profile information</p>
+            </div>
+            <div class="welcome-avatar">
+                @Model.CurrentUser.FirstName?.Substring(0, 1).ToUpper()@Model.CurrentUser.LastName?.Substring(0, 1).ToUpper()
+            </div>
+        </div>
+
+        <!-- Info Cards Grid -->
+        <div class="info-grid">
+            <!-- Personal Information Card -->
+            <div class="info-card">
+                <div class="info-card-header">
+                    <div class="icon blue">
+                        <i class="bi bi-person"></i>
+                    </div>
+                    <h3>Personal Information</h3>
+                </div>
+                <div class="info-card-body">
+                    <div class="info-row">
+                        <span class="info-label">Full Name</span>
+                        <span class="info-value">@Model.CurrentUser.FirstName @Model.CurrentUser.LastName</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Gender</span>
+                        <span class="info-value">@Model.CurrentUser.Gender</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Date of Birth</span>
+                        <span class="info-value">@Model.CurrentUser.DateOfBirth.ToString("dd MMM yyyy")</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">NRIC</span>
+                        <span class="info-value sensitive">@Model.DecryptedNRIC</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Information Card -->
+            <div class="info-card">
+                <div class="info-card-header">
+                    <div class="icon green">
+                        <i class="bi bi-envelope"></i>
+                    </div>
+                    <h3>Contact & Account</h3>
+                </div>
+                <div class="info-card-body">
+                    <div class="info-row">
+                        <span class="info-label">Email</span>
+                        <span class="info-value">@Model.CurrentUser.Email</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Member Since</span>
+                        <span class="info-value">@DateTime.Now.ToString("dd MMM yyyy")</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Resume</span>
+                        <span class="info-value">
+                            @if (!string.IsNullOrEmpty(Model.CurrentUser.ResumeFilePath))
+                            {
+                                <i class="bi bi-file-earmark-check text-success"></i> <text>Uploaded</text>
+                            }
+                            else
+                            {
+                                <i class="bi bi-file-earmark-x text-muted"></i> <text>Not uploaded</text>
+                            }
+                        </span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">2FA Status</span>
+                        <span class="info-value">
+                            @if (Model.CurrentUser.TwoFactorEnabled)
+                            {
+                                <i class="bi bi-shield-check text-success"></i> <text>Enabled</text>
+                            }
+                            else
+                            {
+                                <i class="bi bi-shield-x text-muted"></i> <text>Disabled</text>
+                            }
+                        </span>
+                    </div>
+                </div>
+                <div class="info-card-actions">
+                    <a href="/EnableTwoFactor" class="action-link">
+                        <i class="bi bi-shield-lock"></i> Manage 2FA
+                    </a>
+                    <a href="/ChangePassword" class="action-link">
+                        <i class="bi bi-key"></i> Change Password
+                    </a>
+                </div>
+            </div>
+
+            <!-- About Me Card (Full Width) -->
+            <div class="info-card" style="grid-column: 1 / -1;">
+                <div class="info-card-header">
+                    <div class="icon blue">
+                        <i class="bi bi-chat-quote"></i>
+                    </div>
+                    <h3>Who Am I</h3>
+                </div>
+                <div class="info-card-body">
+                    @if (!string.IsNullOrEmpty(Model.CurrentUser.WhoAmI))
+                    {
+                        @* From Practical 3: XSS Prevention - Razor automatically HTML encodes output *@
+                        @* This prevents <script> tags from executing while displaying special chars *@
+                        <p class="bio-text">@Model.CurrentUser.WhoAmI</p>
+                    }
+                    else
+                    {
+                        <p class="bio-text empty">No bio provided yet.</p>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Session Information -->
+        <div class="session-info">
+            <div class="session-text">
+                <i class="bi bi-clock-history"></i>
+                Logged in from <strong>@Model.SessionIpAddress</strong> at <strong>@Model.LoginTime?.ToString("hh:mm tt")</strong>
+            </div>
+            <div class="session-timeout">
+                <i class="bi bi-hourglass-split"></i>
+                Session expires in <span id="sessionCountdown">20:00</span>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <!-- Non-Authenticated Hero Section -->
+    <div class="hero-section">
+        <div class="hero-icon">
+            <i class="bi bi-briefcase"></i>
+        </div>
+        <h1>Welcome to Ace Job Agency</h1>
+        <p>Your trusted partner in finding the perfect career opportunity. Join our membership program to access exclusive job listings and career services.</p>
+        <div class="hero-buttons">
+            <a href="/Register" class="btn-hero btn-hero-primary">
+                <i class="bi bi-person-plus"></i>
+                Create Account
+            </a>
+            <a href="/Login" class="btn-hero btn-hero-outline">
+                <i class="bi bi-box-arrow-in-right"></i>
+                Sign In
+            </a>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    @if (User.Identity?.IsAuthenticated == true)
+    {
+        <script>
+            // Session countdown timer (20 minutes = 1200 seconds)
+            (function() {
+                var totalSeconds = 20 * 60; // 20 minutes
+                var countdownElement = document.getElementById('sessionCountdown');
+
+                function updateCountdown() {
+                    if (totalSeconds <= 0) {
+                        // Session expired - redirect to login
+                        window.location.href = '/Login?expired=true';
+                        return;
+                    }
+
+                    var minutes = Math.floor(totalSeconds / 60);
+                    var seconds = totalSeconds % 60;
+                    countdownElement.textContent = minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+
+                    // Warning when less than 2 minutes
+                    if (totalSeconds <= 120) {
+                        countdownElement.style.color = '#ef4444';
+                        countdownElement.style.fontWeight = 'bold';
+                    }
+
+                    totalSeconds--;
+                }
+
+                updateCountdown();
+                setInterval(updateCountdown, 1000);
+            })();
+        </script>
+    }
+}
