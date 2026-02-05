@@ -94,6 +94,21 @@
         color: white;
     }
 
+    .security-features {
+        margin-top: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        color: var(--text-muted);
+        font-size: 0.85rem;
+    }
+
+    .security-features i {
+        color: var(--success);
+        font-size: 1rem;
+    }
+
     /* Dashboard for Authenticated Users */
     .dashboard {
         max-width: 900px;
@@ -455,6 +470,10 @@ else
                 <i class="bi bi-box-arrow-in-right"></i>
                 Sign In
             </a>
+        </div>
+        <div class="security-features">
+            <i class="bi bi-shield-check"></i>
+            <span>Encrypted NRIC • Strong Passwords + Lockout • 2FA • reCAPTCHA</span>
         </div>
     </div>
 }

@@ -207,6 +207,18 @@
         text-decoration: underline;
     }
 
+    .lockout-note {
+        text-align: center;
+        margin-top: 1rem;
+        padding: 0.5rem;
+        color: var(--text-muted);
+        font-size: 0.8rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.35rem;
+    }
+
     /* Alert Boxes */
     .alert-box {
         padding: 1rem;
@@ -350,6 +362,11 @@
 
             <div class="register-link">
                 Don't have an account? <a href="/Register">Create one</a>
+            </div>
+
+            <div class="lockout-note">
+                <i class="bi bi-info-circle"></i>
+                Too many failed attempts will lock your account for 5 minutes.
             </div>
         </form>
     </div>

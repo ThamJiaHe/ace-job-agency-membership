@@ -443,6 +443,20 @@
         text-decoration: underline;
     }
 
+    .security-note {
+        text-align: center;
+        margin-top: 1rem;
+        padding: 0.75rem;
+        background: rgba(16, 185, 129, 0.1);
+        border-radius: 8px;
+        color: #059669;
+        font-size: 0.8rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
     /* Server-side validation summary */
     .validation-summary {
         background-color: rgba(239, 68, 68, 0.1);
@@ -684,6 +698,11 @@
 
             <div class="login-link">
                 Already have an account? <a href="/Login">Sign in</a>
+            </div>
+
+            <div class="security-note">
+                <i class="bi bi-shield-check"></i>
+                We encrypt your NRIC and protect your account with strong passwords, 2FA and reCAPTCHA.
             </div>
         </form>
     </div>
