@@ -299,6 +299,71 @@
         color: var(--warning);
     }
 
+    /* 2FA Reminder Banner */
+    .twofa-reminder {
+        background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(251, 191, 36, 0.1) 100%);
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        border-radius: 12px;
+        padding: 1rem 1.5rem;
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .twofa-reminder-content {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .twofa-reminder-icon {
+        width: 40px;
+        height: 40px;
+        background: rgba(245, 158, 11, 0.2);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #d97706;
+        font-size: 1.25rem;
+    }
+
+    .twofa-reminder-text h4 {
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: #92400e;
+        margin: 0 0 0.25rem 0;
+    }
+
+    .twofa-reminder-text p {
+        font-size: 0.85rem;
+        color: #b45309;
+        margin: 0;
+    }
+
+    .btn-enable-2fa {
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
+        font-weight: 600;
+        border-radius: 8px;
+        background: #f59e0b;
+        color: white;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        transition: all 0.2s;
+    }
+
+    .btn-enable-2fa:hover {
+        background: #d97706;
+        color: white;
+        transform: translateY(-1px);
+    }
+
     @@media (max-width: 640px) {
         .welcome-banner {
             text-align: center;
@@ -331,6 +396,26 @@
                 @Model.CurrentUser.FirstName?.Substring(0, 1).ToUpper()@Model.CurrentUser.LastName?.Substring(0, 1).ToUpper()
             </div>
         </div>
+
+        <!-- 2FA Reminder Banner (shown only if 2FA is not enabled) -->
+        @if (!Model.CurrentUser.TwoFactorEnabled)
+        {
+            <div class="twofa-reminder">
+                <div class="twofa-reminder-content">
+                    <div class="twofa-reminder-icon">
+                        <i class="bi bi-shield-exclamation"></i>
+                    </div>
+                    <div class="twofa-reminder-text">
+                        <h4>Protect your account with Two-Factor Authentication</h4>
+                        <p>Add an extra layer of security by enabling 2FA with your authenticator app.</p>
+                    </div>
+                </div>
+                <a href="/EnableTwoFactor" class="btn-enable-2fa">
+                    <i class="bi bi-shield-lock"></i>
+                    Enable 2FA
+                </a>
+            </div>
+        }
 
         <!-- Info Cards Grid -->
         <div class="info-grid">
