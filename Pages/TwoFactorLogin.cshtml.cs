@@ -84,6 +84,9 @@ namespace AceJobAgency.Pages
             {
                 _logger.LogInformation("User {Email} logged in with 2FA", user.Email);
 
+                // Handle multiple login detection - terminate old sessions
+                await HandleMultipleLoginDetection(user, ipAddress);
+
                 // Create session after 2FA
                 await CreateNewSession(user, ipAddress);
 
@@ -131,6 +134,9 @@ namespace AceJobAgency.Pages
             {
                 _logger.LogInformation("User {Email} logged in with recovery code", user.Email);
 
+                // Handle multiple login detection - terminate old sessions
+                await HandleMultipleLoginDetection(user, ipAddress);
+
                 await CreateNewSession(user, ipAddress);
                 await LogAuditAsync(user.Id, "Login Success with Recovery Code", ipAddress);
 
@@ -153,6 +159,31 @@ namespace AceJobAgency.Pages
                 await LogAuditAsync(user.Id, "2FA Failed - Invalid Recovery Code", ipAddress);
                 ModelState.AddModelError(string.Empty, "Invalid recovery code.");
                 return Page();
+            }
+        }
+
+        /// <summary>
+        /// Handle multiple login detection - terminate old sessions
+        /// </summary>
+        private async Task HandleMultipleLoginDetection(ApplicationUser user, string ipAddress)
+        {
+            var existingSessions = _context.ActiveSessions
+                .Where(s => s.UserId == user.Id)
+                .ToList();
+
+            if (existingSessions.Any())
+            {
+                _logger.LogInformation("Multiple login detected for user {Email}. Terminating {Count} old session(s)",
+                    user.Email, existingSessions.Count);
+
+                foreach (var session in existingSessions)
+                {
+                    await LogAuditAsync(user.Id,
+                        $"Multiple Login - Old Session Terminated (IP: {session.IpAddress})", ipAddress);
+                }
+
+                _context.ActiveSessions.RemoveRange(existingSessions);
+                await _context.SaveChangesAsync();
             }
         }
 

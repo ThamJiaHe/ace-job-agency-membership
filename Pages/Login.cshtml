@@ -282,6 +282,20 @@
             <p>Sign in to your Ace Job Agency account</p>
         </div>
 
+        <!-- Multiple Login Detection - User was kicked out -->
+        @if (Model.WasKickedOut)
+        {
+            <div class="alert-box warning">
+                <i class="bi bi-exclamation-triangle-fill alert-icon"></i>
+                <div class="alert-content">
+                    <div class="alert-title">Session Ended</div>
+                    <div class="alert-message">
+                        You have been logged out because your account was signed in from another device or browser.
+                    </div>
+                </div>
+            </div>
+        }
+
         <!-- Success Message (e.g., after registration) -->
         @if (TempData["SuccessMessage"] != null)
         {

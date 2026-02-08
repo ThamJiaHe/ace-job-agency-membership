@@ -41,6 +41,9 @@ namespace AceJobAgency.Pages
         public bool IsLockedOut { get; set; }
         public int LockoutMinutesRemaining { get; set; }
 
+        // For multiple login detection message
+        public bool WasKickedOut { get; set; }
+
         public class InputModel
         {
             [Required(ErrorMessage = "Email is required")]
@@ -54,7 +57,7 @@ namespace AceJobAgency.Pages
             public bool RememberMe { get; set; }
         }
 
-        public IActionResult OnGet()
+        public IActionResult OnGet(bool expired = false)
         {
             // If already logged in, redirect to homepage
             if (User.Identity?.IsAuthenticated == true)
@@ -66,6 +69,13 @@ namespace AceJobAgency.Pages
             if (Request.Query.ContainsKey("ReturnUrl"))
             {
                 TempData["ReturnUrl"] = Request.Query["ReturnUrl"].ToString();
+            }
+
+            // Check if user was kicked out due to another login (multiple login detection)
+            if (expired)
+            {
+                WasKickedOut = true;
+                _logger.LogInformation("User redirected to login page after being kicked out (multiple login detected)");
             }
 
             return Page();

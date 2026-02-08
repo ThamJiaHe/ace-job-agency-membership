@@ -12,7 +12,9 @@ namespace AceJobAgency.Services
         private readonly IConfiguration _configuration;
         private readonly ILogger<RecaptchaService> _logger;
         private readonly string _secretKey;
+        private readonly bool _isTestKey;
         private const string VerifyUrl = "https://www.google.com/recaptcha/api/siteverify";
+        private const string TestSecretKey = "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe";
         private const float MinimumScore = 0.5f; // Reject if score below this
 
         public RecaptchaService(
@@ -24,6 +26,7 @@ namespace AceJobAgency.Services
             _configuration = configuration;
             _logger = logger;
             _secretKey = _configuration["Recaptcha:SecretKey"] ?? "";
+            _isTestKey = _secretKey == TestSecretKey;
         }
 
         public async Task<(bool Success, float Score, string? ErrorMessage)> VerifyAsync(string token, string expectedAction)
@@ -74,6 +77,13 @@ namespace AceJobAgency.Services
                     var errors = result.ErrorCodes != null ? string.Join(", ", result.ErrorCodes) : "Unknown";
                     _logger.LogWarning("reCAPTCHA verification failed. Errors: {Errors}", errors);
                     return (false, 0f, "reCAPTCHA verification failed. Please try again.");
+                }
+
+                // Google test keys return action=null and score=0, so skip validation for test keys
+                if (_isTestKey)
+                {
+                    _logger.LogInformation("reCAPTCHA test key detected - skipping action/score validation");
+                    return (true, 1.0f, null);
                 }
 
                 // Verify the action matches what we expected
